@@ -1,5 +1,5 @@
 {
-  "name": "purpleschool_1",
+  "name": "purpleschool_2",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/roboto": "^5.2.9",
     "globals": "^16.5.0",
     "modern-normalize": "^3.0.1",
     "sass-embedded": "^1.93.3",
