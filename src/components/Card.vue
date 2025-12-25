@@ -10,8 +10,8 @@ const props = defineProps({
     type: Object,
     default: () => {
       return {
-        russian: 'Не задано',
-        english: 'Not defined'
+        word: 'Not defined',
+        translation: 'Не задано',
       }
     }
   }
@@ -33,17 +33,22 @@ const emits = defineEmits(['change', 'flip'])
     <div class="card__wrapper">
       <div class="card__front">
         <div class="card__content">
-          <span class="card__index">{{ formattedIndex }}</span>
-          <p class="card__text">{{ words.russian }}</p>
-          <p class="card__action" @click="emits('flip')">Перевернуть</p>
+          <p class="card__text">{{ words.word }}</p>
         </div>
         <!-- /.card__content -->
+
+        <span class="card__index">{{ formattedIndex }}</span>
+        <p class="card__action" @click="emits('flip')">Перевернуть</p>
       </div>
       <!-- /.card__front -->
 
       <div class="card__back">
-        <span class="card__count">{{ formattedIndex }}</span>
-        <p class="card__text">{{ words.english }}</p>
+        <div class="card__content">
+          <p class="card__text">{{ words.translation }}</p>
+        </div>
+        <!-- /.card__content -->
+
+        <span class="card__index">{{ formattedIndex }}</span>
         <p class="card__action"></p>
       </div>
       <!-- /.card__back -->
@@ -56,7 +61,7 @@ const emits = defineEmits(['change', 'flip'])
 .card {
   width: 300px;
   aspect-ratio: 4 / 6;
-  perspective: 1600px;
+  perspective: -1600px;
 
   &__wrapper {
     position: relative;
@@ -91,7 +96,19 @@ const emits = defineEmits(['change', 'flip'])
     }
   }
 
-  &__count,
+  &__front {
+  }
+
+  &__back {
+    transform: rotateY(180deg);
+  }
+
+  &__content {
+    position: relative;
+    z-index: 2;
+  }
+
+  &__index,
   &__action {
     position: absolute;
     z-index: 2;
@@ -99,7 +116,7 @@ const emits = defineEmits(['change', 'flip'])
     padding: 4px;
   }
 
-  &__count {
+  &__index {
     top: 12px;
     left: 40px;
 
