@@ -5,12 +5,14 @@ import {ref} from "vue";
 import Card from "@/components/Card.vue";
 
 const score = ref(0);
-const data = ref({
-  english: 'Door',
-  russian: 'Дверь',
-  state: 'opened',
-  status: 'pending',
-})
+const data = ref([
+  {
+    english: 'Door',
+    russian: 'Дверь',
+    state: 'opened',
+    status: 'pending',
+  }
+])
 
 </script>
 
@@ -20,7 +22,7 @@ const data = ref({
     Начать игру
   </Button>
 
-  <Card :words="data"></Card>
+  <Card :words="data[0]"></Card>
 </template>
 
 <style scoped>
