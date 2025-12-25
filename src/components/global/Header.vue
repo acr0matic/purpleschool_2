@@ -1,6 +1,12 @@
 <script setup>
-
 import Score from "@/components/Score.vue";
+
+const props = defineProps({
+  score: {
+    type: Number,
+    default: 0
+  }
+})
 </script>
 
 <template>
@@ -8,7 +14,7 @@ import Score from "@/components/Score.vue";
     <div class="container">
       <div class="header__wrapper">
         <p class="header__logo">ЗАПОМНИ СЛОВО</p>
-        <Score></Score>
+        <Score :count="score"></Score>
       </div>
       <!-- /.header__wrapper -->
     </div>

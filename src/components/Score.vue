@@ -27,8 +27,8 @@ const props = defineProps({
   padding: 12px 24px;
   border-radius: 100px;
 
-  background-color: var(--secondary-blue);
+  background-color: var(--blue-secondary);
   font-weight: 700;
-  color: var(--primary-blue);
+  color: var(--blue-primary);
 }
 </style>
