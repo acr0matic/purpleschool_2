@@ -7,7 +7,7 @@ import {computed} from "vue";
 const props = defineProps({
   index: {
     type: Number,
-    default: 1,
+    default: 0,
   },
   status: {
     type: String,
@@ -29,17 +29,17 @@ const props = defineProps({
 
 const isFlipped = computed(() => props.state === 'flipped')
 const formattedIndex = computed(() => {
-  if (props.index < 10) {
-    return "0" + props.index
-  }
+  const visualIndex = props.index + 1;
 
-  return props.index;
+  if (visualIndex < 10) return "0" + visualIndex
+  return visualIndex;
 })
 
-const emits = defineEmits(['change', 'flip'])
+const emits = defineEmits(['change', 'update:status', 'update:state'])
 
 const updateStatus = (newStatus) => {
-  emits('change', {status: newStatus});
+  emits('update:status', newStatus);
+  emits('change', newStatus === 'success' ? 1 : 0)
 }
 
 </script>
@@ -54,7 +54,7 @@ const updateStatus = (newStatus) => {
         <!-- /.card__content -->
 
         <span class="card__index">{{ formattedIndex }}</span>
-        <p class="card__action"><span @click="emits('flip')">Перевернуть</span></p>
+        <p class="card__action"><span @click="emits('update:state', 'flipped')">Перевернуть</span></p>
       </div>
       <!-- /.card__front -->
 
@@ -101,6 +101,11 @@ const updateStatus = (newStatus) => {
     .card__front {
       transform: rotateY(180deg);
     }
+  }
+
+  .icon-success,
+  .icon-error {
+    background-color: #fff;
   }
 
   .icon-success {
@@ -212,7 +217,7 @@ const updateStatus = (newStatus) => {
   &__status {
     position: absolute;
     z-index: 2;
-    top: 10px;
+    top: 8px;
     left: 50%;
     transform: translateX(-50%);
 

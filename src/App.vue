@@ -13,14 +13,7 @@ const data = ref([
 ])
 
 const isPlaying = ref(false);
-
-function onFlip(index) {
-  data.value[index].state = "flipped";
-}
-
-function onChange(index, {status}) {
-  data.value[index].status = status;
-}
+const onChange = (point) => score.value += point;
 
 </script>
 
@@ -34,11 +27,11 @@ function onChange(index, {status}) {
           <Card
               v-for="(word, index) in data"
               :key="index"
-              :state="word.state"
-              :status="word.status"
+              v-model:state="word.state"
+              v-model:status="word.status"
+              :index="index"
               :words="word"
-              @change="payload => onChange(index, payload)"
-              @flip="onFlip(index)"
+              @change="onChange"
           ></Card>
         </div>
 

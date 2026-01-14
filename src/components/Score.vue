@@ -29,5 +29,11 @@ const props = defineProps({
   background-color: var(--blue-secondary);
   font-weight: 700;
   color: var(--blue-primary);
+
+  .icon-health {
+    width: 16px;
+    height: 16px;
+  }
 }
+
 </style>
