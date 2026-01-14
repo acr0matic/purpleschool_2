@@ -7,21 +7,20 @@ import Card from "@/components/Card.vue";
 
 const score = ref(0);
 const data = ref([
-  {
-    word: 'Door',
-    translation: 'Дверь',
-    state: 'opened',
-    status: 'pending',
-  },
-  {
-    word: 'Book',
-    translation: 'Книга',
-    state: 'opened',
-    status: 'pending',
-  }
+  {word: 'Door', translation: 'Дверь', state: 'opened', status: 'pending'},
+  {word: 'Book', translation: 'Книга', state: 'opened', status: 'pending'},
+  {word: 'Mouse', translation: 'Мышь', state: 'opened', status: 'pending'},
 ])
 
 const isPlaying = ref(false);
+
+function onFlip(index) {
+  data.value[index].state = "flipped";
+}
+
+function onChange(index, {status}) {
+  data.value[index].status = status;
+}
 
 </script>
 
@@ -32,7 +31,15 @@ const isPlaying = ref(false);
     <div class="game__content">
       <div class="container">
         <div v-if="isPlaying" class="game__grid">
-          <Card v-for="(word, index) in data" :key="index" :words="word"></Card>
+          <Card
+              v-for="(word, index) in data"
+              :key="index"
+              :state="word.state"
+              :status="word.status"
+              :words="word"
+              @change="payload => onChange(index, payload)"
+              @flip="onFlip(index)"
+          ></Card>
         </div>
 
         <Button v-else @click="isPlaying = true">

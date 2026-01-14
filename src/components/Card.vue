@@ -2,7 +2,7 @@
 import IconError from '@/assets/icons/error.svg'
 import IconSuccess from '@/assets/icons/success.svg'
 
-import {computed, ref} from "vue";
+import {computed} from "vue";
 
 const props = defineProps({
   index: {
@@ -27,6 +27,7 @@ const props = defineProps({
   }
 })
 
+const isFlipped = computed(() => props.state === 'flipped')
 const formattedIndex = computed(() => {
   if (props.index < 10) {
     return "0" + props.index
@@ -38,13 +39,9 @@ const formattedIndex = computed(() => {
 const emits = defineEmits(['change', 'flip'])
 
 const updateStatus = (newStatus) => {
-  localStatus.value = newStatus;
   emits('change', {status: newStatus});
 }
 
-const isFlipped = ref(false);
-const localStatus = ref(props.status);
-const localState = ref(props.state);
 </script>
 
 <template>
@@ -57,14 +54,14 @@ const localState = ref(props.state);
         <!-- /.card__content -->
 
         <span class="card__index">{{ formattedIndex }}</span>
-        <p class="card__action"><span @click="emits('flip'); isFlipped = true;">Перевернуть</span></p>
+        <p class="card__action"><span @click="emits('flip')">Перевернуть</span></p>
       </div>
       <!-- /.card__front -->
 
       <div class="card__back">
-        <div v-if="localStatus" class="card__status">
-          <IconError v-if="localStatus === 'fail'"></IconError>
-          <IconSuccess v-else-if="localStatus === 'success'"></IconSuccess>
+        <div v-if="status" class="card__status">
+          <IconError v-if="status === 'fail'"></IconError>
+          <IconSuccess v-else-if="status === 'success'"></IconSuccess>
         </div>
         <!-- /.card__status -->
 
@@ -76,7 +73,7 @@ const localState = ref(props.state);
         <span class="card__index">{{ formattedIndex }}</span>
 
         <div class="card__action">
-          <div v-if="localStatus === 'pending'" class="card__select">
+          <div v-if="status === 'pending'" class="card__select">
             <IconError @click="updateStatus('fail')"></IconError>
             <IconSuccess @click="updateStatus('success')"></IconSuccess>
           </div>
