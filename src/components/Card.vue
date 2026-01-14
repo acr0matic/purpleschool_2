@@ -1,10 +1,20 @@
 <script setup>
-import {computed} from "vue";
+import IconError from '@/assets/icons/error.svg'
+import IconSuccess from '@/assets/icons/success.svg'
+
+import {computed, ref} from "vue";
 
 const props = defineProps({
   index: {
     type: Number,
     default: 1,
+  },
+  status: {
+    type: String,
+    default: 'pending',
+  },
+  state: {
+    type: String,
   },
   words: {
     type: Object,
@@ -26,10 +36,19 @@ const formattedIndex = computed(() => {
 })
 
 const emits = defineEmits(['change', 'flip'])
+
+const updateStatus = (newStatus) => {
+  localStatus.value = newStatus;
+  emits('change', {status: newStatus});
+}
+
+const isFlipped = ref(false);
+const localStatus = ref(props.status);
+const localState = ref(props.state);
 </script>
 
 <template>
-  <div class="card">
+  <div :class="{'card--flip': isFlipped}" class="card">
     <div class="card__wrapper">
       <div class="card__front">
         <div class="card__content">
@@ -38,18 +57,32 @@ const emits = defineEmits(['change', 'flip'])
         <!-- /.card__content -->
 
         <span class="card__index">{{ formattedIndex }}</span>
-        <p class="card__action" @click="emits('flip')">Перевернуть</p>
+        <p class="card__action"><span @click="emits('flip'); isFlipped = true;">Перевернуть</span></p>
       </div>
       <!-- /.card__front -->
 
       <div class="card__back">
+        <div v-if="localStatus" class="card__status">
+          <IconError v-if="localStatus === 'fail'"></IconError>
+          <IconSuccess v-else-if="localStatus === 'success'"></IconSuccess>
+        </div>
+        <!-- /.card__status -->
+
         <div class="card__content">
           <p class="card__text">{{ words.translation }}</p>
         </div>
         <!-- /.card__content -->
 
         <span class="card__index">{{ formattedIndex }}</span>
-        <p class="card__action"></p>
+
+        <div class="card__action">
+          <div v-if="localStatus === 'pending'" class="card__select">
+            <IconError @click="updateStatus('fail')"></IconError>
+            <IconSuccess @click="updateStatus('success')"></IconSuccess>
+          </div>
+
+          <p v-else>Завершено</p>
+        </div>
       </div>
       <!-- /.card__back -->
     </div>
@@ -62,6 +95,24 @@ const emits = defineEmits(['change', 'flip'])
   width: 300px;
   aspect-ratio: 4 / 6;
   perspective: -1600px;
+
+  &--flip {
+    .card__back {
+      transform: rotateY(0deg);
+    }
+
+    .card__front {
+      transform: rotateY(180deg);
+    }
+  }
+
+  .icon-success {
+    color: #09BB00;
+  }
+
+  .icon-error {
+    color: #D00303;
+  }
 
   &__wrapper {
     position: relative;
@@ -85,11 +136,12 @@ const emits = defineEmits(['change', 'flip'])
     border-radius: 15px;
     background-color: #ffffff;
     backface-visibility: hidden;
+    transition: transform 0.4s ease;
 
     &::after {
       content: '';
       position: absolute;
-      inset: 24px;
+      inset: 28px 20px 24px;
 
       border-radius: 12px;
       border: 1px solid #CCE8FF;
@@ -117,7 +169,7 @@ const emits = defineEmits(['change', 'flip'])
   }
 
   &__index {
-    top: 12px;
+    top: 16px;
     left: 40px;
 
     font-size: 14px;
@@ -135,11 +187,41 @@ const emits = defineEmits(['change', 'flip'])
     text-transform: uppercase;
     letter-spacing: 2px;
 
-    cursor: pointer;
-    transition: color 0.3s ease;
 
-    &:hover {
-      color: var(--blue-primary);
+    svg,
+    span {
+      transition: color 0.3s ease;
+      cursor: pointer;
+
+      &:hover {
+        color: var(--blue-primary);
+      }
+    }
+  }
+
+  &__select {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin-bottom: -8px;
+    padding: 4px 8px;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &__status {
+    position: absolute;
+    z-index: 2;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    svg {
+      width: 40px;
+      height: 40px;
     }
   }
 }
